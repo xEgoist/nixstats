@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+  <link rel="stylesheet" href="index.css">
+  <head>
+    <meta charset="utf-8">
+    <title>NixStat for PR Status</title>
+  </head>
+  <body>
+    <div class="prinput">
+      <form id="form" onsubmit="queryPR()">
+        <label for="inputbox">PR Number: <input id="prNumber" type="text" class="inputbox" required /></label>
+        <input type="submit" value="Submit">
+      <p id="loading" hidden>Fetching<span></span></p>
+      <p><span id=errormsg style="color:red"></span></p>
+      </form>
+    </div>
+
+    <div class="container">
+    <div class="row">
+              <div class="pt45">
+                <div class="row justify-content-between">
+                  <div id="0" class="col check">
+                    <span class="is-complete"></span>
+                    <p>nixos-unstable</p>
+                  </div>
+
+                  <div id="1" class="col check">
+                    <span class="is-complete"></span>
+                    <p>master</p>
+                  </div>
+
+                  <div id="2" class="col check">
+                    <span class="is-complete"></span>
+                    <p>nixos-unstable-small</p>
+                  </div>
+                </div>
+                  <div class="row2 justify-content-between">
+                  <div id="3" class="col2 check">
+                    <span class="is-complete"></span>
+                    <p>nixos-22.11 (+backport)</p>
+                  </div>
+                    <div id="4" class="col2 check">
+                      <span class="is-complete"></span>
+                      <p>nixpkgs-unstable</p>
+                    </div>
+                  </div>
+              </div>
+            </div>
+  </div>
+    <script src="ws.js"></script>
+  </body>
+</html>
