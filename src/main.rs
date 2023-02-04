@@ -22,7 +22,7 @@ static API_KEY: &'static str = env!("API_KEY");
 #[tokio::main]
 async fn main() -> Result<()> {
     let app = Router::new().route("/ws", get(handler));
-    axum::Server::bind(&"0.0.0.0:3000".parse().map_err(Error::ParseError)?)
+    axum::Server::bind(&"127.0.0.1:3000".parse().map_err(Error::ParseError)?)
         .serve(app.into_make_service())
         .await
         .map_err(Error::ServeError)?;
@@ -64,7 +64,7 @@ async fn handle_socket(mut socket: WebSocket) {
                         set.spawn(get_status(branch, sha_val.clone()));
                     }
                     let mut ret = [0; 5];
-
+                    println!("SHA: {}", sha_val.clone());
                     while let Some(res) = set.join_next().await {
                         let stat = res.unwrap();
                         let status = stat.unwrap();

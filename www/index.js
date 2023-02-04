@@ -1,131 +1,62 @@
-import * as wasm from "nixstat";
+  const prNumber = document.getElementById("prNumber");
+  let socket;
+  const connect = () => {
+    socket = new WebSocket("wss://nixtracker.org/ws");
+    socket.binaryType = 'arraybuffer';
+    socket.onopen = (event) => {
+      socket.send(prNumber.value);
+    };
 
-const Branch = {
-    NixosUnstable: 0,
-    NixosUnstableSmall: 1,
-    NixpkgsUnstable: 2,
-    Nixos2205: 3,
-    Nixos2205Small: 4,
-}
+    socket.onclose = (event) => {
+      if (event.wasClean) {
+        document.getElementById("loading").style.display = 'none';
+        document.getElementById("errormsg").textContent = `${event.reason}`;
+      }
+    };
 
-async function shim() {
+    socket.addEventListener("message", (event) => {
+      // Convert the binary data to a Uint8Array object
+      const binaryData = new Uint8Array(event.data);
+
+      // You can do any processing you need on the binaryData here
+    });
+  };
+  // Create a WebSocket client and connect to 0.0.0.0:3000
+
+  // Define the sendNumber function that sends the value from the input
+  async function queryPR() {
     event.preventDefault();
-    const val = document.getElementById('prNumber').value;
-    const num = parseInt(val,10);
+
+    const num = parseInt(prNumber.value,10);
     if (isNaN(num)){
-      document.getElementById("errormsg").textContent = "Error Not a Number";
       console.log(num);
+      document.getElementById("errormsg").textContent = "Error Not a Number";
       return;
     }
+    if (!socket || socket.readyState === WebSocket.CLOSED) {
+        connect();
+    }
+  else {
+        socket.send(prNumber.value);
+  }
     document.getElementById("errormsg").textContent = "";
     document.getElementById("loading").style.display = 'block';
-    // Unstable-Small
-    try {
-      const result = await wasm.get_branches_status(val,Branch.NixosUnstableSmall);
-      if (result) {
-        var element = document.getElementById("1");
-        element.classList.add("completed");
-      }
-      else{
-      var element = document.getElementById("1");
-      element.classList.remove("completed");
-      }
-    } catch(err) {
-      if (err.message == "missing field `merge_commit_sha`") {
-        document.getElementById("errormsg").textContent = "Pull Request Not Found";
-        console.log("Oh oh we are in trouble");
-      }
-        console.log("Oh oh we are in trouble " + err.message);
-    }
-    //NixosUnstable
-    try {
-      const result = await wasm.get_branches_status(val,Branch.NixosUnstable);
-      if (result) {
-        var element = document.getElementById("3");
-        element.classList.add("completed");
-      }
-      else{
-      var element = document.getElementById("3");
-      element.classList.remove("completed");
-      }
-      
-    } catch(err) {
-      if (err.message == "missing field `merge_commit_sha`") {
-        document.getElementById("errormsg").textContent = "Pull Request Not Found";
-        console.log("Oh oh we are in trouble");
-      }
-        console.log("Oh oh we are in trouble " + err.message);
-    }
-    //NixpkgsUnstable
-    try {
-      const result = await wasm.get_branches_status(val,Branch.NixpkgsUnstable);
-      if (result) {
-        var element = document.getElementById("2");
-        element.classList.add("completed");
-      }
-      else{
-      var element = document.getElementById("2");
-      element.classList.remove("completed");
-      }
-      
-    } catch(err) {
-      if (err.message == "missing field `merge_commit_sha`") {
-        document.getElementById("errormsg").textContent = "Pull Request Not Found";
-        document.getElementById("loading").style.display = 'none';
-        console.log("Oh oh we are in trouble");
-      }
-        console.log("Oh oh we are in trouble " + err.message);
-    }
+    socket.binaryType = 'arraybuffer';
 
-    //nixos-22.05
-    try {
-      const result = await wasm.get_branches_status(val,Branch.Nixos2205);
-      if (result) {
-        var element = document.getElementById("5");
-        element.classList.add("completed");
+    // Add an event listener to handle binary messages
+    socket.addEventListener("message", (event) => {
+      const binaryData = new Uint8Array(event.data);
+      console.log(binaryData);
+      for (let [index, val] of binaryData.entries()) {
+        if (val == 1) {
+          var element = document.getElementById(index);
+          element.classList.add("completed");
+        }
+        else  {
+            var element = document.getElementById(index);
+            element.classList.remove("completed");
+        }
       }
-      else{
-      var element = document.getElementById("5");
-      element.classList.remove("completed");
-      }
-      
-    } catch(err) {
-      if (err.message == "missing field `merge_commit_sha`") {
-        document.getElementById("errormsg").textContent = "Pull Request Not Found";
-        document.getElementById("loading").style.display = 'none';
-        console.log("Oh oh we are in trouble");
-      }
-        console.log("Oh oh we are in trouble " + err.message);
-    }
-    //nixos-22.05-small
-    try {
-      const result = await wasm.get_branches_status(val,Branch.Nixos2205Small);
-      if (result) {
-        var element = document.getElementById("4");
-        element.classList.add("completed");
-      }
-      else{
-      var element = document.getElementById("4");
-      element.classList.remove("completed");
-      }
-      
-    } catch(err) {
-      if (err.message == "missing field `merge_commit_sha`") {
-        document.getElementById("errormsg").textContent = "Pull Request Not Found";
-        document.getElementById("loading").style.display = 'none';
-        console.log("Oh oh we are in trouble");
-      }
-        console.log("Oh oh we are in trouble " + err.message);
-    }
-    document.getElementById("loading").style.display = 'none';
-}
+    });
 
-//console.log(process.env.GITHUB_TOKEN);
-const form = document.getElementById('form');
-form.addEventListener('submit', shim);
-//(async() => {
-//  console.log('1')
-//  shim()
-//  .then((data) => { console.log(data)})
-//  console.log('2')
-//})()
+  }
