@@ -6,47 +6,46 @@
     <title>NixStat for PR Status</title>
   </head>
   <body>
-    <div class="prinput">
+    <header class="prinput">
       <form id="form" onsubmit="queryPR()">
-        <label for="inputbox">PR Number: <input id="prNumber" type="text" class="inputbox" required /></label>
+        <label for="inputbox">PR Number:</label>
+        <input id="prNumber" type="text" class="inputbox" required />
         <input type="submit" value="Submit">
+      </form>
       <p id="loading" hidden>Fetching<span></span></p>
       <p><span id=errormsg style="color:red"></span></p>
-      </form>
-    </div>
+    </header>
 
-    <div class="container">
-    <div class="row">
-              <div class="pt45">
-                <div class="row justify-content-between">
-                  <div id="0" class="col check">
-                    <span class="is-complete"></span>
-                    <p>nixos-unstable</p>
-                  </div>
+    <main class="container">
+      <section class="pt45">
+        <div class="row justify-content-between">
+          <article id="0" class="col check">
+            <span class="is-complete"></span>
+            <p>nixos-unstable</p>
+          </article>
 
-                  <div id="1" class="col check">
-                    <span class="is-complete"></span>
-                    <p>master</p>
-                  </div>
+          <article id="1" class="col check">
+            <span class="is-complete"></span>
+            <p>master</p>
+          </article>
 
-                  <div id="2" class="col check">
-                    <span class="is-complete"></span>
-                    <p>nixos-unstable-small</p>
-                  </div>
-                </div>
-                  <div class="row2 justify-content-between">
-                  <div id="3" class="col2 check">
-                    <span class="is-complete"></span>
-                    <p>nixos-22.11 (+backport)</p>
-                  </div>
-                    <div id="4" class="col2 check">
-                      <span class="is-complete"></span>
-                      <p>nixpkgs-unstable</p>
-                    </div>
-                  </div>
-              </div>
-            </div>
-  </div>
-    <script src="ws.js"></script>
+          <article id="2" class="col check">
+            <span class="is-complete"></span>
+            <p>nixos-unstable-small</p>
+          </article>
+        </div>
+        <div class="row2 justify-content-between">
+          <article id="3" class="col2 check">
+            <span class="is-complete"></span>
+            <p>nixos-22.11 (+backport)</p>
+          </article>
+          <article id="4" class="col2 check">
+            <span class="is-complete"></span>
+            <p>nixpkgs-unstable</p>
+          </article>
+        </div>
+      </section>
+    </main>
+    <script src="index.js"></script>
   </body>
 </html>
