@@ -1,21 +1,23 @@
 <!DOCTYPE html>
 <html>
-  <link rel="stylesheet" href="index.css">
+  <link rel="stylesheet" href="spectre.min.css" />
+  <link rel="stylesheet" href="spectre-icons.min.css" />
+  <link rel="stylesheet" href="index.css" />
   <head>
-    <meta charset="utf-8">
+    <meta charset="utf-8" />
     <title>nixTracker for PR Status Check</title>
-    <meta name="description" content="Query the Nix channel to check if a pull request have been merged.">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Query the Nix channel to check if a pull request have been merged." />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   </head>
   <body>
     <header class="prinput">
       <form id="form" onsubmit="queryPR()">
         <label for="inputbox">PR Number:</label>
         <input id="prNumber" type="text" class="inputbox" required />
-        <input type="submit" value="Submit">
+        <button id="submit" class="btn btn-primary btn-lg">Submit</button>
       </form>
       <p id="loading" hidden>Fetching<span></span></p>
-      <p><span id=errormsg style="color:red"></span></p>
+      <p><span id="errormsg" style="color: red;"></span></p>
     </header>
 
     <main class="container">

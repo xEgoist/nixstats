@@ -1,7 +1,3 @@
-@viewport {
-  width: device-width;
-  zoom: 1;
-}
 .pt45{padding-top:45px;}
 .check {
 	text-align: center;
@@ -79,7 +75,7 @@
 
 input[type=text] {
   font-size:16px;
-  width: 10%;
+  width: 150px;
   padding: 9px 20px;
   box-sizing: border-box;
 }
@@ -92,16 +88,9 @@ input[type=text] {
   text-align: center;
 }
 
-input[type=submit] {
-  background-color: #800080;
-  color: white;
-  padding: 12px 20px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
 
 #form {
+  margin-top: 25px;
 }
 
 .check  p span{font-size: 14px;}
@@ -113,19 +102,4 @@ input[type=submit] {
     content: '';
   }
 
-  @keyframes dots {
-    0%, 20% {
-      content: '.';
-    }
-    40% {
-      content: '..';
-    }
-    60% {
-      content: '...';
-    }
-    90%, 100% {
-      content: '';
-    }
-}
-
-
+  

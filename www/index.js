@@ -41,6 +41,7 @@
   }
     document.getElementById("errormsg").textContent = "";
     document.getElementById("loading").style.display = 'block';
+    document.getElementById("submit").classList.add('loading');
     socket.binaryType = 'arraybuffer';
 
     // Add an event listener to handle binary messages
@@ -57,6 +58,8 @@
             element.classList.remove("completed");
         }
       }
+
+      document.getElementById("submit").classList.remove('loading');
     });
 
   }
