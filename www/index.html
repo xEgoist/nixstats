@@ -5,51 +5,40 @@
   <link rel="stylesheet" href="index.css" />
   <head>
     <meta charset="utf-8" />
-    <title>nixTracker for PR Status Check</title>
-    <meta name="description" content="Query the Nix channel to check if a pull request have been merged." />
+    <title>NixOS/NixPkgs Pull Request Tracker</title>
+    <meta name="description" content="Track pull requests for various NixOS/NixPkgs channels" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   </head>
   <body>
-    <header class="prinput">
-      <form id="form" onsubmit="queryPR()">
-        <label for="inputbox">PR Number:</label>
-        <input id="prNumber" type="text" class="inputbox" required />
-        <button id="submit" class="btn btn-primary btn-lg">Submit</button>
-      </form>
-      <p id="loading" hidden>Fetching<span></span></p>
-      <p><span id="errormsg" style="color: red;"></span></p>
-    </header>
-
-    <main class="container">
-      <section class="pt45">
-        <div class="row justify-content-between">
-          <article id="0" class="col check">
-            <span class="is-complete"></span>
-            <p>nixos-unstable</p>
-          </article>
-
-          <article id="1" class="col check">
-            <span class="is-complete"></span>
-            <p>master</p>
-          </article>
-
-          <article id="2" class="col check">
-            <span class="is-complete"></span>
-            <p>nixos-unstable-small</p>
-          </article>
-        </div>
-        <div class="row2 justify-content-between">
-          <article id="3" class="col2 check">
-            <span class="is-complete"></span>
-            <p>nixos-22.11 (+backport)</p>
-          </article>
-          <article id="4" class="col2 check">
-            <span class="is-complete"></span>
-            <p>nixpkgs-unstable</p>
-          </article>
-        </div>
-      </section>
-    </main>
-    <script src="index.js"></script>
-  </body>
-</html>
+  <header>
+    <form id="form" onsubmit="queryPR()">
+      <input type="text" id="prNumber" placeholder="Enter PR Number here" required>
+      <button id="submit" class="btn btn-primary btn-lg">Submit</button>
+    </form>
+    <p id="errormsg" style="color:red;"></p>
+  </header>
+  <main>
+    <article>
+      <button class="btn btn-action btn-primary"><i id= "0" class="icon"></i></button>
+      <label>nixos-unstable</label>
+    </article>
+    <article>
+      <button class="btn btn-action btn-primary"><i id="1" class="icon"></i></button>
+      <label>master</label>
+    </article>
+    <article>
+      <button class="btn btn-action btn-primary"><i id="2" class="icon"></i></button>
+      <label>nixos-unstable-small</label>
+    </article>
+    <article>
+      <button class="btn btn-action btn-primary"><i id="3" class="icon"></i></button>
+      <label>nixos-22.11 (+backport)</label>
+    </article>
+    <article>
+      <button class="btn btn-action btn-primary"><i id="4" class="icon"></i></button>
+      <label>nixpkgs-unstable</label>
+    </article>
+  </main>
+</body>
+  <script src="index.js"></script>
+  </html>

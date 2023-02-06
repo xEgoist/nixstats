@@ -1,3 +1,5 @@
+use std::sync::Arc;
+
 use axum::{
     extract::ws::{self, CloseFrame, Message, WebSocket, WebSocketUpgrade},
     http::Request,
@@ -6,7 +8,10 @@ use axum::{
     Router,
 };
 use hyper::body::Buf;
+use hyper::client::HttpConnector;
 use hyper::Body;
+use hyper::Client;
+use hyper_openssl::HttpsConnector;
 use serde::Deserialize;
 
 #[derive(Debug)]
@@ -17,7 +22,7 @@ enum Error {
 }
 
 type Result<T> = std::result::Result<T, Error>;
-static API_KEY: &'static str = env!("API_KEY");
+static API_KEY: &str = env!("API_KEY");
 
 #[tokio::main]
 async fn main() -> Result<()> {
@@ -33,6 +38,9 @@ async fn handler(ws: WebSocketUpgrade) -> Response {
 }
 
 async fn handle_socket(mut socket: WebSocket) {
+    let ssl = hyper_openssl::HttpsConnector::new().unwrap();
+    let cl = hyper::Client::builder().build::<_, Body>(ssl);
+    let client = Arc::new(cl);
     while let Some(msg) = socket.recv().await {
         let msg = if let Ok(msg) = msg {
             msg
@@ -43,7 +51,7 @@ async fn handle_socket(mut socket: WebSocket) {
             axum::extract::ws::Message::Text(t) => {
                 println!("RECEIVED {}", &t);
                 let pr_number: Result<u32> = t.parse().map_err(Error::ParseIntError);
-                if let Err(_) = pr_number {
+                if pr_number.is_err() {
                     let exit = CloseFrame {
                         code: axum::extract::ws::close_code::INVALID,
                         reason: "PR number should only consist of numbers".into(),
@@ -51,7 +59,7 @@ async fn handle_socket(mut socket: WebSocket) {
                     let _ = socket.send(Message::Close(Some(exit))).await;
                     continue;
                 }
-                let sha = request_pr_sha(pr_number.unwrap()).await;
+                let sha = request_pr_sha(&client, pr_number.unwrap()).await;
                 if let Ok(sha_val) = sha {
                     let mut set = tokio::task::JoinSet::new();
                     for branch in [
@@ -61,12 +69,20 @@ async fn handle_socket(mut socket: WebSocket) {
                         Branch::Master,
                         Branch::Nixos2211,
                     ] {
-                        set.spawn(get_status(branch, sha_val.clone()));
+                        let client = client.clone();
+                        set.spawn(get_status(client, branch, sha_val.clone()));
                     }
                     let mut ret = [0; 5];
                     println!("SHA: {}", sha_val.clone());
                     while let Some(res) = set.join_next().await {
                         let stat = res.unwrap();
+                        if stat.is_err() {
+                            let exit = CloseFrame {
+                                code: axum::extract::ws::close_code::INVALID,
+                                reason: "Error: Unable to find the PR provided".into(),
+                            };
+                            let _ = socket.send(Message::Close(Some(exit))).await;
+                        }
                         let status = stat.unwrap();
                         if status.1 != BranchStatus::Diverged && status.1 != BranchStatus::Ahead {
                             ret[status.0 as usize] = 1;
@@ -148,25 +164,27 @@ type HyperResult<T> = std::result::Result<T, Box<dyn std::error::Error + Send + 
 pub struct PRResponse {
     merge_commit_sha: String,
 }
-async fn request_pr_sha(pr: u32) -> HyperResult<String> {
+async fn request_pr_sha(
+    client: &Client<HttpsConnector<HttpConnector>>,
+    pr: u32,
+) -> HyperResult<String> {
     let url =
         format!("https://api.github.com/repos/nixos/nixpkgs/pulls/{pr}").parse::<hyper::Uri>()?;
-    let mut res = handle_request(&url).await?;
+    let mut res = handle_request(client, &url).await?;
     let body = hyper::body::aggregate(res.body_mut()).await?;
     let res: PRResponse = serde_json::from_reader(body.reader())?;
     Ok(res.merge_commit_sha)
 }
 
 async fn get_status(
+    client: Arc<Client<HttpsConnector<HttpConnector>>>,
     branch: Branch,
     merge_commit_sha: String,
 ) -> HyperResult<(Branch, BranchStatus)> {
-    let url = format!(
-        "https://api.github.com/repos/nixos/nixpkgs/compare/{}...{}",
-        branch, merge_commit_sha
-    )
-    .parse::<hyper::Uri>()?;
-    let mut res = handle_request(&url).await?;
+    let url =
+        format!("https://api.github.com/repos/nixos/nixpkgs/compare/{branch}...{merge_commit_sha}")
+            .parse::<hyper::Uri>()?;
+    let mut res = handle_request(&client, &url).await?;
     // let body = hyper::body::aggregate(res.body_mut()).await?;
     let body = hyper::body::to_bytes(res.body_mut()).await?;
     // let body_str = std::str::from_utf8(&body)?;
@@ -179,10 +197,10 @@ async fn get_status(
     Ok((branch, ret.status))
 }
 // TODO: Pass the client here so we don't keep making new ones for each request
-async fn handle_request(url: &hyper::Uri) -> HyperResult<Response<Body>> {
-    let ssl = hyper_openssl::HttpsConnector::new()?;
-    let client = hyper::Client::builder().build::<_, Body>(ssl);
-
+async fn handle_request(
+    client: &Client<HttpsConnector<HttpConnector>>,
+    url: &hyper::Uri,
+) -> HyperResult<Response<Body>> {
     let req = Request::builder()
         .uri(url)
         .header(hyper::header::USER_AGENT, "nixstats")

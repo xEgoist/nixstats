@@ -1,105 +1,44 @@
-.pt45{padding-top:45px;}
-.check {
-	text-align: center;
-	position: relative;
-	display: block;
-}
-.col {
-  float: left;
-  width: 33.33%;
-}
-.col2 {
-  float: left;
-  position: center;
-  width: 50%;
-}
-
-.row2:after{
-  content: "";
-  display: table;
-  clear: both;
-}
-
-.row:after {
-  content: "";
-  display: table;
-  clear: both;
-}
-.check .is-complete{
-	display: block;
-	position: relative;
-	border-radius: 30%;
-	height: 30px;
-	width: 30px;
-	border: 0px solid #AFAFAF;
-	background-color: #f7be16;
-	margin: 0 auto;
-	transition: background 0.25s linear;
-	-webkit-transition: background 0.25s linear;
-	z-index: 2;
-}
-.check .is-complete:after {
-	display: block;
-	position: absolute;
-	content: '';
-	height: 14px;
-	width: 7px;
-	top: -2px;
-	bottom: 0;
-	left: 5px;
-	margin: auto 0;
-	border: 0px solid #AFAFAF;
-	border-width: 0px 2px 2px 0;
-	transform: rotate(45deg);
-	opacity: 0;
-}
-.check.completed .is-complete{
-	border-color: #27aa80;
-	border-width: 0px;
-	background-color: #27aa80;
-}
-.check.completed .is-complete:after {
-	border-color: #fff;
-	border-width: 0px 3px 3px 0;
-	width: 7px;
-	left: 11px;
-	opacity: 1;
-}
-.check p {
-	color: #A4A4A4;
-	font-size: 16px;
-	margin-top: 8px;
-	margin-bottom: 0;
-	line-height: 20px;
-}
-
-input[type=text] {
-  font-size:16px;
-  width: 150px;
-  padding: 9px 20px;
-  box-sizing: border-box;
-}
-
-.inputbox {
-  margin: auto;
-}
-
-.prinput {
+header {
+  padding: 1em;
   text-align: center;
+}
+
+#errormsg {
+  padding: 1em;
 }
 
 
 #form {
-  margin-top: 25px;
+}
+input[type="text"] {
+  padding: 0.5em;
+  margin-right: 1em;
+  height: 40px;
 }
 
-.check  p span{font-size: 14px;}
-.check.completed p{color: #000;}
+main {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding: 1em 0;
+}
 
 
- #loading span:before {
-    animation: dots 2s linear infinite;
-    content: '';
-  }
+article {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 1em;
+}
 
-  
+button {
+  padding: 1em;
+  cursor: default;
+}
+.btn {
+  cursor: default;
+}
+
+label {
+  margin-top: 0.5em;
+}

@@ -1,5 +1,6 @@
-  const prNumber = document.getElementById("prNumber");
   let socket;
+  const prNumber = document.getElementById("prNumber");
+  const loading = document.getElementById("submit");
   const connect = () => {
     socket = new WebSocket("wss://nixtracker.org/ws");
     socket.binaryType = 'arraybuffer';
@@ -9,21 +10,16 @@
 
     socket.onclose = (event) => {
       if (event.wasClean) {
-        document.getElementById("loading").style.display = 'none';
         document.getElementById("errormsg").textContent = `${event.reason}`;
+        loading.classList.remove("loading");
       }
     };
 
     socket.addEventListener("message", (event) => {
-      // Convert the binary data to a Uint8Array object
       const binaryData = new Uint8Array(event.data);
-
-      // You can do any processing you need on the binaryData here
     });
   };
-  // Create a WebSocket client and connect to 0.0.0.0:3000
 
-  // Define the sendNumber function that sends the value from the input
   async function queryPR() {
     event.preventDefault();
 
@@ -31,6 +27,7 @@
     if (isNaN(num)){
       console.log(num);
       document.getElementById("errormsg").textContent = "Error Not a Number";
+      loading.classList.remove("loading");
       return;
     }
     if (!socket || socket.readyState === WebSocket.CLOSED) {
@@ -40,22 +37,20 @@
         socket.send(prNumber.value);
   }
     document.getElementById("errormsg").textContent = "";
-    document.getElementById("loading").style.display = 'block';
-    document.getElementById("submit").classList.add('loading');
+      loading.classList.add("loading");
     socket.binaryType = 'arraybuffer';
 
-    // Add an event listener to handle binary messages
     socket.addEventListener("message", (event) => {
       const binaryData = new Uint8Array(event.data);
       console.log(binaryData);
       for (let [index, val] of binaryData.entries()) {
         if (val == 1) {
           var element = document.getElementById(index);
-          element.classList.add("completed");
+          element.classList.add("icon-check");
         }
         else  {
             var element = document.getElementById(index);
-            element.classList.remove("completed");
+            element.classList.remove("icon-check");
         }
       }
 
