@@ -41,7 +41,7 @@ async fn handle_socket(mut socket: WebSocket) {
     let ssl = hyper_openssl::HttpsConnector::new().unwrap();
     let cl = hyper::Client::builder().build::<_, Body>(ssl);
     let client = Arc::new(cl);
-    while let Some(msg) = socket.recv().await {
+    'outer: while let Some(msg) = socket.recv().await {
         let msg = if let Ok(msg) = msg {
             msg
         } else {
@@ -82,6 +82,7 @@ async fn handle_socket(mut socket: WebSocket) {
                                 reason: "Error: Unable to find the PR provided".into(),
                             };
                             let _ = socket.send(Message::Close(Some(exit))).await;
+                            continue 'outer;
                         }
                         let status = stat.unwrap();
                         if status.1 != BranchStatus::Diverged && status.1 != BranchStatus::Ahead {
