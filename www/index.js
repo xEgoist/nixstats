@@ -9,9 +9,13 @@
     };
 
     socket.onclose = (event) => {
-      if (event.wasClean) {
+      if (event.wasClean && event.code != 1000) {
         document.getElementById("errormsg").textContent = `${event.reason}`;
         loading.classList.remove("loading");
+        for (let i = 0; i <= 4; i++) {
+          var element = document.getElementById(i);
+          element.classList.remove("icon-check");
+        }
       }
     };
 
@@ -54,7 +58,7 @@
         }
       }
 
-      document.getElementById("submit").classList.remove('loading');
+      loading.classList.remove('loading');
     });
 
   }
