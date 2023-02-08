@@ -42,3 +42,14 @@ button {
 label {
   margin-top: 0.5em;
 }
+
+@media only screen and (max-device-width: 480px) {
+    main {
+    display: block;
+    align-items: left;
+    margin-left: 1.5em;
+  }
+    article {
+      display: block;
+    }
+}
