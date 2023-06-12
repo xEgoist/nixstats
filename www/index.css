@@ -31,6 +31,10 @@ article {
   margin: 1em;
 }
 
+h1 {
+  text-align: center;
+}
+
 button {
   padding: 1em;
   cursor: default;

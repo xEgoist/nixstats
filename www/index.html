@@ -1,44 +1,49 @@
 <!DOCTYPE html>
 <html>
-  <link rel="stylesheet" href="spectre.min.css" />
-  <link rel="stylesheet" href="spectre-icons.min.css" />
-  <link rel="stylesheet" href="index.css" />
   <head>
-    <meta charset="utf-8" />
-    <title>NixOS/NixPkgs Pull Request Tracker</title>
-    <meta name="description" content="Track pull requests for various NixOS/NixPkgs channels" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="spectre.min.css" />
+    <link rel="stylesheet" href="spectre-icons.min.css" />
+    <link rel="stylesheet" href="index.css" />
+    <link rel="icon" href="data:,">
+    <META charset="utf-8" />
+    <TITLE>NixOS/NixPkgs Pull Request Tracker</TITLE>
+    <META http-equiv='content-language' content='en-US'>
+    <META name="description" content="Track pull requests for various NixOS/NixPkgs channels" />
+    <META name="viewport" content="width=device-width, initial-scale=1.0" />
   </head>
   <body>
-  <header>
-    <form id="form" onsubmit="queryPR()">
-      <input type="text" id="prNumber" placeholder="Enter PR Number here" required>
-      <button id="submit" class="btn btn-primary btn-lg">Submit</button>
-    </form>
-    <p id="errormsg" style="color:red;"></p>
-  </header>
-  <main>
-    <article>
-      <button class="btn btn-action btn-primary"><i id= "0" class="icon"></i></button>
-      <label>nixos-unstable</label>
-    </article>
-    <article>
-      <button class="btn btn-action btn-primary"><i id="1" class="icon"></i></button>
-      <label>master</label>
-    </article>
-    <article>
-      <button class="btn btn-action btn-primary"><i id="2" class="icon"></i></button>
-      <label>nixos-unstable-small</label>
-    </article>
-    <article>
-      <button class="btn btn-action btn-primary"><i id="3" class="icon"></i></button>
-      <label>nixos-22.11 (+backport)</label>
-    </article>
-    <article>
-      <button class="btn btn-action btn-primary"><i id="4" class="icon"></i></button>
-      <label>nixpkgs-unstable</label>
-    </article>
-  </main>
+    <h1> NixOS/Nixpkgs PR Status Tracker </h1>
+    <header>
+        <input type="text" id="prNumber" placeholder="Enter PR number here" required>
+        <button id="submit" class="btn btn-primary btn-lg" onclick="queryPR()">Submit</button>
+      <p id="errormsg" style="color:red;"></p>
+    </header>
+    <main>
+      <article>
+        <button class="btn btn-action btn-primary"><i id= "0" class="icon"></i></button>
+        <label>nixos-unstable</label>
+      </article>
+      <article>
+        <button class="btn btn-action btn-primary"><i id="1" class="icon"></i></button>
+        <label>master</label>
+      </article>
+      <article>
+        <button class="btn btn-action btn-primary"><i id="2" class="icon"></i></button>
+        <label>nixos-unstable-small</label>
+      </article>
+      <article>
+        <button class="btn btn-action btn-primary"><i id="3" class="icon"></i></button>
+        <label>nixos-22.11 (Deprecated)</label>
+      </article>
+      <article>
+        <button class="btn btn-action btn-primary"><i id="5" class="icon"></i></button>
+        <label>nixos-23.05 (+backport)</label>
+      </article>
+      <article>
+        <button class="btn btn-action btn-primary"><i id="4" class="icon"></i></button>
+        <label>nixpkgs-unstable</label>
+      </article>
+    </main>
 </body>
   <script src="index.js"></script>
   </html>

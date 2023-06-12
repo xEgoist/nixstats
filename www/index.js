@@ -12,7 +12,7 @@
       if (event.wasClean && event.code != 1000) {
         document.getElementById("errormsg").textContent = `${event.reason}`;
         loading.classList.remove("loading");
-        for (let i = 0; i <= 4; i++) {
+        for (let i = 0; i <= 5; i++) {
           var element = document.getElementById(i);
           element.classList.remove("icon-check");
         }
@@ -25,7 +25,6 @@
   };
 
   async function queryPR() {
-    event.preventDefault();
 
     const num = parseInt(prNumber.value,10);
     if (isNaN(num)){

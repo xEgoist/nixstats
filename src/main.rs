@@ -68,11 +68,12 @@ async fn handle_socket(mut socket: WebSocket) {
                         Branch::NixpkgsUnstable,
                         Branch::Master,
                         Branch::Nixos2211,
+                        Branch::Nixos2305,
                     ] {
                         let client = client.clone();
                         set.spawn(get_status(client, branch, sha_val.clone()));
                     }
-                    let mut ret = [0; 5];
+                    let mut ret = [0; 6];
                     println!("SHA: {}", sha_val.clone());
                     while let Some(res) = set.join_next().await {
                         let stat = res.unwrap();
@@ -133,6 +134,7 @@ pub enum Branch {
     NixosUnstableSmall = 2,
     NixpkgsUnstable = 4,
     Nixos2211 = 3,
+    Nixos2305 = 5,
     Master = 1,
 }
 impl std::fmt::Display for Branch {
@@ -143,6 +145,7 @@ impl std::fmt::Display for Branch {
             Self::NixosUnstableSmall => write!(f, "nixos-unstable-small"),
             Self::Master => write!(f, "master"),
             Self::Nixos2211 => write!(f, "nixos-22.11"),
+            Self::Nixos2305 => write!(f, "nixos-23.05"),
         }
     }
 }
